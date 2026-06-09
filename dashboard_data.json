@@ -1,0 +1,405 @@
+{
+  "kpi": {
+    "total_sales": 872363.12,
+    "total_orders": 1975,
+    "total_customers": 736,
+    "total_products": 1599,
+    "avg_order_value": 220.35
+  },
+  "monthly_sales": [
+    {
+      "YearMonth": "2015-01",
+      "Sales": 19546.163
+    },
+    {
+      "YearMonth": "2015-02",
+      "Sales": 11678.994
+    },
+    {
+      "YearMonth": "2015-03",
+      "Sales": 6716.044
+    },
+    {
+      "YearMonth": "2015-04",
+      "Sales": 12455.482
+    },
+    {
+      "YearMonth": "2015-05",
+      "Sales": 15165.051
+    },
+    {
+      "YearMonth": "2015-06",
+      "Sales": 11884.169
+    },
+    {
+      "YearMonth": "2015-07",
+      "Sales": 10075.74
+    },
+    {
+      "YearMonth": "2015-08",
+      "Sales": 26797.763
+    },
+    {
+      "YearMonth": "2015-09",
+      "Sales": 17158.932
+    },
+    {
+      "YearMonth": "2015-10",
+      "Sales": 10112.641
+    },
+    {
+      "YearMonth": "2015-11",
+      "Sales": 18349.764
+    },
+    {
+      "YearMonth": "2015-12",
+      "Sales": 17045.8427
+    },
+    {
+      "YearMonth": "2016-01",
+      "Sales": 17701.686400000002
+    },
+    {
+      "YearMonth": "2016-02",
+      "Sales": 13018.315
+    },
+    {
+      "YearMonth": "2016-03",
+      "Sales": 12207.4066
+    },
+    {
+      "YearMonth": "2016-04",
+      "Sales": 11963.696
+    },
+    {
+      "YearMonth": "2016-05",
+      "Sales": 10483.482
+    },
+    {
+      "YearMonth": "2016-06",
+      "Sales": 13026.6682
+    },
+    {
+      "YearMonth": "2016-07",
+      "Sales": 10706.72
+    },
+    {
+      "YearMonth": "2016-08",
+      "Sales": 22782.577
+    },
+    {
+      "YearMonth": "2016-09",
+      "Sales": 16484.901
+    },
+    {
+      "YearMonth": "2016-10",
+      "Sales": 12293.038
+    },
+    {
+      "YearMonth": "2016-11",
+      "Sales": 12139.0395
+    },
+    {
+      "YearMonth": "2016-12",
+      "Sales": 9761.333
+    },
+    {
+      "YearMonth": "2017-01",
+      "Sales": 26342.541
+    },
+    {
+      "YearMonth": "2017-02",
+      "Sales": 42967.915
+    },
+    {
+      "YearMonth": "2017-03",
+      "Sales": 25982.287
+    },
+    {
+      "YearMonth": "2017-04",
+      "Sales": 19472.164
+    },
+    {
+      "YearMonth": "2017-05",
+      "Sales": 22649.3888
+    },
+    {
+      "YearMonth": "2017-06",
+      "Sales": 14050.143
+    },
+    {
+      "YearMonth": "2017-07",
+      "Sales": 16501.007
+    },
+    {
+      "YearMonth": "2017-08",
+      "Sales": 24156.3226
+    },
+    {
+      "YearMonth": "2017-09",
+      "Sales": 9789.662
+    },
+    {
+      "YearMonth": "2017-10",
+      "Sales": 22599.782
+    },
+    {
+      "YearMonth": "2017-11",
+      "Sales": 20378.24
+    },
+    {
+      "YearMonth": "2017-12",
+      "Sales": 21365.1485
+    },
+    {
+      "YearMonth": "2018-01",
+      "Sales": 27367.592
+    },
+    {
+      "YearMonth": "2018-02",
+      "Sales": 36285.936
+    },
+    {
+      "YearMonth": "2018-03",
+      "Sales": 26882.953
+    },
+    {
+      "YearMonth": "2018-04",
+      "Sales": 21203.607
+    },
+    {
+      "YearMonth": "2018-05",
+      "Sales": 15979.157
+    },
+    {
+      "YearMonth": "2018-06",
+      "Sales": 12138.1558
+    },
+    {
+      "YearMonth": "2018-07",
+      "Sales": 25110.4795
+    },
+    {
+      "YearMonth": "2018-08",
+      "Sales": 26823.69
+    },
+    {
+      "YearMonth": "2018-09",
+      "Sales": 23148.87
+    },
+    {
+      "YearMonth": "2018-10",
+      "Sales": 17558.322
+    },
+    {
+      "YearMonth": "2018-11",
+      "Sales": 17407.27
+    },
+    {
+      "YearMonth": "2018-12",
+      "Sales": 16647.042
+    }
+  ],
+  "yearly": [
+    {
+      "Year": 2015,
+      "Sales": 176986.5857,
+      "Growth_%": NaN
+    },
+    {
+      "Year": 2016,
+      "Sales": 162568.8627,
+      "Growth_%": -8.1
+    },
+    {
+      "Year": 2017,
+      "Sales": 266254.6009,
+      "Growth_%": 63.8
+    },
+    {
+      "Year": 2018,
+      "Sales": 266553.0743,
+      "Growth_%": 0.1
+    }
+  ],
+  "region": [
+    {
+      "Region": "West",
+      "Sales": 271156.6335
+    },
+    {
+      "Region": "East",
+      "Sales": 246227.631
+    },
+    {
+      "Region": "Central",
+      "Sales": 208805.0696
+    },
+    {
+      "Region": "South",
+      "Sales": 146173.7895
+    }
+  ],
+  "category": [
+    {
+      "Category": "Furniture",
+      "Sales": 285562.8726
+    },
+    {
+      "Category": "Office Supplies",
+      "Sales": 252956.161
+    },
+    {
+      "Category": "Technology",
+      "Sales": 333844.09
+    }
+  ],
+  "segment": [
+    {
+      "Segment": "Consumer",
+      "Sales": 431199.995
+    },
+    {
+      "Segment": "Corporate",
+      "Sales": 263710.1641
+    },
+    {
+      "Segment": "Home Office",
+      "Sales": 177452.9645
+    }
+  ],
+  "subcategory": [
+    {
+      "Sub-Category": "Appliances",
+      "Sales": 35826.749
+    },
+    {
+      "Sub-Category": "Bookcases",
+      "Sales": 41278.8721
+    },
+    {
+      "Sub-Category": "Copiers",
+      "Sales": 55739.121999999996
+    },
+    {
+      "Sub-Category": "Binders",
+      "Sales": 64742.922
+    },
+    {
+      "Sub-Category": "Accessories",
+      "Sales": 69913.68
+    },
+    {
+      "Sub-Category": "Machines",
+      "Sales": 83658.196
+    },
+    {
+      "Sub-Category": "Storage",
+      "Sales": 84433.206
+    },
+    {
+      "Sub-Category": "Tables",
+      "Sales": 88768.3035
+    },
+    {
+      "Sub-Category": "Chairs",
+      "Sales": 122626.94499999999
+    },
+    {
+      "Sub-Category": "Phones",
+      "Sales": 124533.092
+    }
+  ],
+  "top_products": [
+    {
+      "Product Name": "HON 5400 Series Task Chairs for Big and Tall",
+      "Sales": 6589.2119999999995
+    },
+    {
+      "Product Name": "Zebra ZM400 Thermal Label Printer",
+      "Sales": 6965.700000000001
+    },
+    {
+      "Product Name": "Cubify CubeX 3D Printer Triple Head Print",
+      "Sales": 7999.98
+    },
+    {
+      "Product Name": "Hon Deluxe Fabric Upholstered Stacking Chairs, Rounded Back",
+      "Sales": 8148.932
+    },
+    {
+      "Product Name": "Hewlett Packard LaserJet 3310 Copier",
+      "Sales": 8159.8640000000005
+    },
+    {
+      "Product Name": "Riverside Palais Royal Lawyers Bookcase, Royale Cherry Finish",
+      "Sales": 8298.8316
+    },
+    {
+      "Product Name": "GBC DocuBind TL300 Electric Binding System",
+      "Sales": 8521.404999999999
+    },
+    {
+      "Product Name": "HP Designjet T520 Inkjet Large Format Printer - 24\" Color",
+      "Sales": 8749.95
+    },
+    {
+      "Product Name": "Lexmark MX611dhe Monochrome Laser Printer",
+      "Sales": 11219.934000000001
+    },
+    {
+      "Product Name": "Canon imageCLASS 2200 Advanced Copier",
+      "Sales": 17499.95
+    }
+  ],
+  "seasonality": [
+    {
+      "Month": 1,
+      "Avg_Sales": 276.46803161094226
+    },
+    {
+      "Month": 2,
+      "Avg_Sales": 280.9490810810811
+    },
+    {
+      "Month": 3,
+      "Avg_Sales": 201.08876918767507
+    },
+    {
+      "Month": 4,
+      "Avg_Sales": 213.42606229508198
+    },
+    {
+      "Month": 5,
+      "Avg_Sales": 177.560991160221
+    },
+    {
+      "Month": 6,
+      "Avg_Sales": 189.25605925925925
+    },
+    {
+      "Month": 7,
+      "Avg_Sales": 212.22430782312924
+    },
+    {
+      "Month": 8,
+      "Avg_Sales": 288.9665304597701
+    },
+    {
+      "Month": 9,
+      "Avg_Sales": 193.553386627907
+    },
+    {
+      "Month": 10,
+      "Avg_Sales": 212.08062033898307
+    },
+    {
+      "Month": 11,
+      "Avg_Sales": 194.5137136752137
+    },
+    {
+      "Month": 12,
+      "Avg_Sales": 194.06995868263473
+    }
+  ]
+}

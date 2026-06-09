@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sales Analysis Dashboard — Navyan Internship</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --bg: #f4f6f8;
+    --card: #ffffff;
+    --border: #e2e6ea;
+    --text: #1a2332;
+    --muted: #6b7a90;
+    --accent: #2D6A4F;
+    --accent2: #40916C;
+    --accent3: #74C69D;
+    --accent4: #B7E4C7;
+    --danger: #c0392b;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.07);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* ── TOP BAR ── */
+  .topbar { background: var(--accent); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; }
+  .topbar h1 { color: #fff; font-size: 18px; font-weight: 600; letter-spacing: 0.3px; }
+  .topbar span { color: rgba(255,255,255,0.75); font-size: 13px; }
+
+  /* ── FILTER BAR ── */
+  .filterbar { background: var(--card); border-bottom: 1px solid var(--border); padding: 12px 28px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .filterbar label { font-size: 13px; color: var(--muted); margin-right: 4px; }
+  .filterbar select { padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; background: var(--bg); color: var(--text); cursor: pointer; }
+  .filterbar select:focus { outline: 2px solid var(--accent3); }
+  .filter-info { margin-left: auto; font-size: 12px; color: var(--muted); }
+
+  /* ── LAYOUT ── */
+  .page { padding: 24px 28px; max-width: 1400px; margin: 0 auto; }
+
+  /* ── KPI CARDS ── */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .kpi-card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 18px 20px; box-shadow: var(--shadow); }
+  .kpi-card .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
+  .kpi-card .value { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1; }
+  .kpi-card .sub { font-size: 12px; color: var(--accent2); margin-top: 6px; font-weight: 500; }
+  .kpi-card.highlight { border-left: 3px solid var(--accent); }
+
+  /* ── CHART GRID ── */
+  .chart-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .chart-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .chart-card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 20px; box-shadow: var(--shadow); }
+  .chart-card h3 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .chart-card h3 .badge { background: #e8f5ee; color: var(--accent); font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 10px 14px; border-bottom: 2px solid var(--border); color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafb; }
+  .pill { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .pill.green { background: #e8f5ee; color: #1a6b42; }
+  .pill.red { background: #fdecea; color: #a93226; }
+  .pill.blue { background: #eaf0fb; color: #1a4b8c; }
+
+  /* ── LEGEND ── */
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ── FOOTER ── */
+  .footer { text-align: center; padding: 20px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); margin-top: 10px; }
+
+  @media (max-width: 768px) {
+    .chart-grid, .chart-grid-3 { grid-template-columns: 1fr; }
+    .topbar h1 { font-size: 15px; }
+    .page { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>📊 Sales Analysis Dashboard</h1>
+  <span id="data-label">Navyan Data Analytics Internship — Project 1</span>
+</div>
+
+<div class="filterbar">
+  <label>Year</label>
+  <select id="filter-year" onchange="applyFilters()">
+    <option value="all">All Years</option>
+  </select>
+  <label>Region</label>
+  <select id="filter-region" onchange="applyFilters()">
+    <option value="all">All Regions</option>
+  </select>
+  <label>Category</label>
+  <select id="filter-category" onchange="applyFilters()">
+    <option value="all">All Categories</option>
+  </select>
+  <span class="filter-info" id="row-count">—</span>
+</div>
+
+<div class="page">
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card highlight">
+      <div class="label">Total Sales</div>
+      <div class="value" id="kpi-sales">—</div>
+      <div class="sub" id="kpi-sales-sub"></div>
+    </div>
+    <div class="kpi-card highlight">
+      <div class="label">Total Profit</div>
+      <div class="value" id="kpi-profit">—</div>
+      <div class="sub" id="kpi-profit-sub"></div>
+    </div>
+    <div class="kpi-card highlight">
+      <div class="label">Profit Margin</div>
+      <div class="value" id="kpi-margin">—</div>
+      <div class="sub">of total sales</div>
+    </div>
+    <div class="kpi-card highlight">
+      <div class="label">Total Orders</div>
+      <div class="value" id="kpi-orders">—</div>
+      <div class="sub">unique orders</div>
+    </div>
+    <div class="kpi-card highlight">
+      <div class="label">Avg Order Value</div>
+      <div class="value" id="kpi-aov">—</div>
+      <div class="sub">per order</div>
+    </div>
+  </div>
+
+  <!-- Row 1: Trend + Category donut -->
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Monthly Sales Trend <span class="badge" id="trend-badge">all years</span></h3>
+      <div style="position: relative; height: 240px;">
+        <canvas id="trendChart" role="img" aria-label="Monthly sales trend over time">Monthly sales trend data.</canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>Sales by Category</h3>
+      <div style="position: relative; height: 200px;">
+        <canvas id="categoryChart" role="img" aria-label="Sales distribution by category">Category breakdown.</canvas>
+      </div>
+      <div class="legend" id="cat-legend"></div>
+    </div>
+  </div>
+
+  <!-- Row 2: Region + Yearly growth -->
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Sales &amp; Profit by Region</h3>
+      <div style="position: relative; height: 240px;">
+        <canvas id="regionChart" role="img" aria-label="Sales and profit by region">Region data.</canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>Yearly Growth</h3>
+      <div style="position: relative; height: 240px;">
+        <canvas id="yearlyChart" role="img" aria-label="Yearly sales and profit comparison">Yearly data.</canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 3: Top Products table -->
+  <div class="chart-card" style="margin-bottom: 20px;">
+    <h3>Top 10 Products by Sales</h3>
+    <div class="table-wrap">
+      <table id="products-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Product</th>
+            <th>Sales</th>
+            <th>Profit</th>
+            <th>Margin</th>
+            <th>Performance</th>
+          </tr>
+        </thead>
+        <tbody id="products-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Navyan Data Analytics Internship · Project 1: Sales Data Analysis Dashboard · Built with Python + Matplotlib/Seaborn + HTML
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   DATA — Replace this with your real exported
+   dashboard_data.json (from sales_analysis.py)
+   via:  fetch('dashboard_data.json').then(r => r.json())
+════════════════════════════════════════════ */
+const SAMPLE_DATA = {
+  rows: generateSampleRows()
+};
+
+function generateSampleRows() {
+  const regions = ['West','East','Central','South'];
+  const categories = ['Technology','Furniture','Office Supplies'];
+  const subcats = {'Technology':['Phones','Laptops','Accessories'],'Furniture':['Chairs','Tables','Bookcases'],'Office Supplies':['Paper','Binders','Storage']};
+  const products = {
+    'Phones':['Apple iPhone 14','Samsung Galaxy','Google Pixel'],
+    'Laptops':['Dell XPS 15','MacBook Pro','HP Spectre'],
+    'Accessories':['Logitech MX Keys','Jabra Headset','Anker Hub'],
+    'Chairs':['Hon Task Chair','Safco Ergo','Flash Furniture'],
+    'Tables':['Bestar L-Desk','Bush Office','Sauder Table'],
+    'Bookcases':['Bush Bookcase','Sauder 5-Shelf','Whalen Bookcase'],
+    'Paper':['Xerox 500 Sheets','Avery Cardstock','Hammermill Paper'],
+    'Binders':['Avery 3-Ring','Cardinal Slant','Wilson Jones'],
+    'Storage':['Sterilite Drawer','Iris Storage','Rubbermaid Box']
+  };
+  const rows = [];
+  const now = new Date(2024,11,31);
+  const start = new Date(2021,0,1);
+  for(let i=0;i<9500;i++){
+    const d = new Date(start.getTime() + Math.random()*(now-start));
+    const reg = regions[Math.floor(Math.random()*4)];
+    const cat = categories[Math.floor(Math.random()*3)];
+    const sub = subcats[cat][Math.floor(Math.random()*3)];
+    const prod = products[sub][Math.floor(Math.random()*3)];
+    const sales = Math.round((50 + Math.random()*2000) * 100)/100;
+    const profitPct = (cat==='Technology' ? 0.25 : cat==='Furniture' ? 0.12 : 0.30) + (Math.random()-0.5)*0.2;
+    const profit = Math.round(sales * profitPct * 100)/100;
+    rows.push({ date: d.toISOString().split('T')[0], region: reg, category: cat, subcategory: sub, product: prod, sales, profit, orderid: 'ORD-'+String(i).padStart(5,'0') });
+  }
+  return rows;
+}
+
+/* ══════════════════════════════════════════
+   CHARTS REGISTRY
+════════════════════════════════════════════ */
+const charts = {};
+
+function destroyChart(id) {
+  if(charts[id]) { charts[id].destroy(); delete charts[id]; }
+}
+
+/* ══════════════════════════════════════════
+   FORMAT HELPERS
+════════════════════════════════════════════ */
+function fmtCurrency(v) {
+  if(Math.abs(v)>=1e6) return '$'+(v/1e6).toFixed(2)+'M';
+  if(Math.abs(v)>=1e3) return '$'+(v/1e3).toFixed(1)+'K';
+  return '$'+v.toFixed(0);
+}
+function fmtPct(v) { return (v>=0?'+':'')+v.toFixed(1)+'%'; }
+
+/* ══════════════════════════════════════════
+   FILTER INIT
+════════════════════════════════════════════ */
+function initFilters(rows) {
+  const years = [...new Set(rows.map(r=>r.date.slice(0,4)))].sort();
+  const regions = [...new Set(rows.map(r=>r.region))].sort();
+  const categories = [...new Set(rows.map(r=>r.category))].sort();
+  const fy = document.getElementById('filter-year');
+  const fr = document.getElementById('filter-region');
+  const fc = document.getElementById('filter-category');
+  years.forEach(y=>{ const o=document.createElement('option'); o.value=y; o.textContent=y; fy.appendChild(o); });
+  regions.forEach(r=>{ const o=document.createElement('option'); o.value=r; o.textContent=r; fr.appendChild(o); });
+  categories.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; fc.appendChild(o); });
+}
+
+function getFilteredRows() {
+  const yr = document.getElementById('filter-year').value;
+  const re = document.getElementById('filter-region').value;
+  const ca = document.getElementById('filter-category').value;
+  return SAMPLE_DATA.rows.filter(r =>
+    (yr==='all' || r.date.startsWith(yr)) &&
+    (re==='all' || r.region===re) &&
+    (ca==='all' || r.category===ca)
+  );
+}
+
+/* ══════════════════════════════════════════
+   MAIN RENDER
+════════════════════════════════════════════ */
+function applyFilters() {
+  const rows = getFilteredRows();
+  document.getElementById('row-count').textContent = rows.length.toLocaleString() + ' orders shown';
+  renderKPIs(rows);
+  renderTrend(rows);
+  renderCategory(rows);
+  renderRegion(rows);
+  renderYearly(rows);
+  renderProducts(rows);
+}
+
+/* ── KPIs ── */
+function renderKPIs(rows) {
+  const totalSales = rows.reduce((s,r)=>s+r.sales, 0);
+  const totalProfit = rows.reduce((s,r)=>s+r.profit, 0);
+  const orders = new Set(rows.map(r=>r.orderid)).size;
+  const margin = totalSales ? (totalProfit/totalSales*100) : 0;
+  const aov = orders ? totalSales/orders : 0;
+
+  document.getElementById('kpi-sales').textContent = fmtCurrency(totalSales);
+  document.getElementById('kpi-profit').textContent = fmtCurrency(totalProfit);
+  document.getElementById('kpi-margin').textContent = margin.toFixed(1)+'%';
+  document.getElementById('kpi-orders').textContent = orders.toLocaleString();
+  document.getElementById('kpi-aov').textContent = fmtCurrency(aov);
+
+  const profitEl = document.getElementById('kpi-profit');
+  profitEl.style.color = totalProfit >= 0 ? '#1a6b42' : '#a93226';
+  document.getElementById('kpi-profit-sub').textContent = totalProfit >= 0 ? '▲ Profitable' : '▼ Loss';
+  document.getElementById('kpi-sales-sub').textContent = rows.length.toLocaleString() + ' line items';
+}
+
+/* ── Monthly Trend ── */
+function renderTrend(rows) {
+  const monthly = {};
+  rows.forEach(r => {
+    const key = r.date.slice(0,7);
+    if(!monthly[key]) monthly[key]={sales:0};
+    monthly[key].sales += r.sales;
+  });
+  const keys = Object.keys(monthly).sort();
+  const labels = keys;
+  const data = keys.map(k => Math.round(monthly[k].sales));
+
+  destroyChart('trend');
+  charts['trend'] = new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Sales',
+        data,
+        borderColor: '#2D6A4F',
+        backgroundColor: 'rgba(45,106,79,0.08)',
+        borderWidth: 2,
+        pointRadius: 2,
+        tension: 0.35,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { maxTicksLimit: 8, autoSkip: true, font:{size:11} }, grid:{display:false} },
+        y: { ticks: { callback: v=>fmtCurrency(v), font:{size:11} }, grid:{color:'rgba(0,0,0,0.05)'} }
+      }
+    }
+  });
+  const yr = document.getElementById('filter-year').value;
+  document.getElementById('trend-badge').textContent = yr==='all' ? 'all years' : yr;
+}
+
+/* ── Category Donut ── */
+const CAT_COLORS = ['#2D6A4F','#74C69D','#B7E4C7'];
+function renderCategory(rows) {
+  const cat = {};
+  rows.forEach(r => { cat[r.category] = (cat[r.category]||0) + r.sales; });
+  const labels = Object.keys(cat);
+  const data = labels.map(k=>Math.round(cat[k]));
+  const total = data.reduce((a,b)=>a+b,0);
+
+  destroyChart('category');
+  charts['category'] = new Chart(document.getElementById('categoryChart'), {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{ data, backgroundColor: CAT_COLORS, borderWidth: 2, borderColor: '#fff', hoverOffset: 6 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '60%',
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${fmtCurrency(ctx.parsed)} (${(ctx.parsed/total*100).toFixed(1)}%)` } } }
+    }
+  });
+  const legend = document.getElementById('cat-legend');
+  legend.innerHTML = labels.map((l,i)=>`<span class="legend-item"><span class="legend-dot" style="background:${CAT_COLORS[i]}"></span>${l}: ${fmtCurrency(data[i])}</span>`).join('');
+}
+
+/* ── Region Grouped Bar ── */
+function renderRegion(rows) {
+  const reg = {};
+  rows.forEach(r => {
+    if(!reg[r.region]) reg[r.region]={sales:0,profit:0};
+    reg[r.region].sales += r.sales;
+    reg[r.region].profit += r.profit;
+  });
+  const labels = Object.keys(reg).sort((a,b)=>reg[b].sales-reg[a].sales);
+  destroyChart('region');
+  charts['region'] = new Chart(document.getElementById('regionChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Sales', data: labels.map(k=>Math.round(reg[k].sales)), backgroundColor: '#40916C', borderRadius: 4 },
+        { label: 'Profit', data: labels.map(k=>Math.round(reg[k].profit)), backgroundColor: '#B7E4C7', borderRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { font:{size:11}, boxWidth:12 } } },
+      scales: {
+        x: { grid:{display:false}, ticks:{font:{size:11}} },
+        y: { ticks: { callback: v=>fmtCurrency(v), font:{size:11} }, grid:{color:'rgba(0,0,0,0.05)'} }
+      }
+    }
+  });
+}
+
+/* ── Yearly Growth ── */
+function renderYearly(rows) {
+  const yr = {};
+  rows.forEach(r => {
+    const y = r.date.slice(0,4);
+    if(!yr[y]) yr[y]={sales:0,profit:0};
+    yr[y].sales += r.sales;
+    yr[y].profit += r.profit;
+  });
+  const years = Object.keys(yr).sort();
+  destroyChart('yearly');
+  charts['yearly'] = new Chart(document.getElementById('yearlyChart'), {
+    type: 'bar',
+    data: {
+      labels: years,
+      datasets: [
+        { label: 'Sales', data: years.map(y=>Math.round(yr[y].sales)), backgroundColor: '#2D6A4F', borderRadius: 4 },
+        { label: 'Profit', data: years.map(y=>Math.round(yr[y].profit)), backgroundColor: '#74C69D', borderRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position:'top', labels:{font:{size:11},boxWidth:12} } },
+      scales: {
+        x: { grid:{display:false}, ticks:{font:{size:11}} },
+        y: { ticks:{callback:v=>fmtCurrency(v),font:{size:11}}, grid:{color:'rgba(0,0,0,0.05)'} }
+      }
+    }
+  });
+}
+
+/* ── Top Products Table ── */
+function renderProducts(rows) {
+  const prod = {};
+  rows.forEach(r => {
+    if(!prod[r.product]) prod[r.product]={sales:0,profit:0};
+    prod[r.product].sales += r.sales;
+    prod[r.product].profit += r.profit;
+  });
+  const top10 = Object.entries(prod).sort((a,b)=>b[1].sales-a[1].sales).slice(0,10);
+  const maxSales = top10[0][1].sales;
+  const tbody = document.getElementById('products-body');
+  tbody.innerHTML = top10.map(([name,d],i) => {
+    const margin = (d.profit/d.sales*100).toFixed(1);
+    const barW = Math.round(d.sales/maxSales*100);
+    const pillClass = parseFloat(margin)>20?'green':parseFloat(margin)>0?'blue':'red';
+    return `<tr>
+      <td style="color:var(--muted);font-size:12px">${i+1}</td>
+      <td style="font-weight:500;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</td>
+      <td>${fmtCurrency(d.sales)}</td>
+      <td style="color:${d.profit>=0?'#1a6b42':'#a93226'}">${fmtCurrency(d.profit)}</td>
+      <td><span class="pill ${pillClass}">${margin}%</span></td>
+      <td style="min-width:100px"><div style="background:#e8f5ee;border-radius:4px;height:8px;width:100%"><div style="background:var(--accent);border-radius:4px;height:8px;width:${barW}%"></div></div></td>
+    </tr>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════
+   INIT
+════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  initFilters(SAMPLE_DATA.rows);
+  applyFilters();
+});
+</script>
+</body>
+</html>
